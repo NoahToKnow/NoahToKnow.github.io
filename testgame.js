@@ -7,10 +7,6 @@ document.getElementById('game-container').appendChild(canvas);
 
 const ctx = canvas.getContext('2d');
 
-// Load enemy emoji
-const enemyEmoji = new Image();
-enemyEmoji.src = 'https://twemoji.maxcdn.com/2/72x72/1f47e.png'; // Placeholder URL for enemy emoji
-
 // Game properties
 const playerSpeed = 3;
 const enemySpeed = 1;
@@ -303,7 +299,8 @@ function gameLoop() {
     if (enemy.y <= 0 || enemy.y >= canvas.height - enemy.height) enemy.dy *= -1;
 
     // Draw enemy
-    ctx.drawImage(enemyEmoji, enemy.x, enemy.y, enemy.width, enemy.height);
+    ctx.fillStyle = enemy.color;
+    ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
 
     // Draw enemy health bar
     ctx.fillStyle = 'black';
@@ -385,7 +382,6 @@ function gameLoop() {
           }
           gameOver = true;
           alert('Game Over! You ran out of health.');
-          return;
         }
       }
     }
@@ -423,17 +419,18 @@ function gameLoop() {
   timeLeft -= 0.0167; // Approximately 1 second per frame at 60 FPS
   if (timeLeft <= 0) {
     gameOver = true;
-    alert('Game Over! Time is up.');
+    alert('Time\'s up! Game Over.');
     return;
   }
 
   requestAnimationFrame(gameLoop);
 }
 
-// Start the game
-function startGame() {
+// Restart game
+function restartGame() {
   gameOver = false;
   score = 0;
+  timeLeft = 120;
   currentLevel = 0;
   checkpointCollected = false;
   deathCount = 0;
@@ -441,9 +438,6 @@ function startGame() {
   gameLoop();
 }
 
-// Restart the game
-function restartGame() {
-  if (gameOver) {
-    startGame();
-  }
-}
+// Start the game
+initializeLevel();
+gameLoop();
